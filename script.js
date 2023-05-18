@@ -7,6 +7,7 @@ const walk2 = new Image();
 const walk3 = new Image();
 const walk4 = new Image();
 const back1 = new Image();
+const back2 = new Image();
 
 walk1.src = "images/walk1.jpg";
 walk2.src = "images/walk2.jpg";
@@ -68,12 +69,12 @@ back1.addEventListener (
   } else {
     console.log(`Key "${e.key}" repeating [event: keydown]`);
   }
-  if(e.keyCode === 39 && position < 2000){ //=== is checking if equal , == is casting
-    position = position+50;
+  if(e.keyCode === 39 && position < 3000){ //=== is checking if equal , == is casting
+    position = position+100;
     walkingMCright("right");
   }
-    if(e.keyCode === 37 && position > 700){
-    position = position-50;
+    if(e.keyCode === 37 && position > 1000){
+    position = position-100;
     drawBackground1(back1);
     walkingMCright("left");
     }
