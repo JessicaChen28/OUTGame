@@ -1,18 +1,22 @@
 
 var position = 1000;
 var positionWalk = 1;
+var countFadeFrames = 0;
+
 
 const walk1 = new Image();
 const walk2 = new Image();
 const walk3 = new Image();
 const walk4 = new Image();
 const back1 = new Image();
+var currentBackground = back1;
 const back2 = new Image();
 
 walk1.src = "images/walk1.jpg";
 walk2.src = "images/walk2.jpg";
 walk3.src = "images/walk3.jpg";
 walk4.src = "images/walk4.jpg";
+back2.src = "images/campdrawingbackground2.jpg";
 
 function getCanvaContext(){
   var c = document.getElementById("myCanvas");
@@ -33,11 +37,11 @@ function drawMCwalk(image, direction){
 
 function drawBackground1(image){
   var context = getCanvaContext();
-  context.drawImage(image,0 ,0);
+  context.drawImage(image,0 ,0, 4032, 3024);
 }
 
-function walkingMCright(direction){
-  drawBackground1(back1);
+function walkingMCright(direction, background){
+  drawBackground1(background);
   //could try with array of images
   //var array = [walk1,walk2,walk3,walk4];
   if(positionWalk === 1 ) {
@@ -57,11 +61,32 @@ function walkingMCright(direction){
     positionWalk = 1;
   }
 }
+function fadeBlack(){
+  getCanvaContext().rect(0,0,4032,3024);
+  getCanvaContext().fillStyle = "#00000005"; //80 half transparent 
+  getCanvaContext().fill();
+  countFadeFrames++;
+  if(countFadeFrames < 100){
+    window.requestAnimationFrame(fadeBlack);
+  }else{
+    countFadeFrames = 100;
+    newBack2();
+  }
+}
+function newBack2(){
+  position = 100;
+  currentBackground = back2;
+  getCanvaContext().clearRect(0,0,4032,3024);
+  drawBackground1(back2);
+  walkingMCright("right",currentBackground);
+}
 
 back1.addEventListener (
   "load", () => {
   var c = document.getElementById("myCanvas");
-    drawBackground1(back1);
+    
+    drawBackground1(currentBackground);
+    walkingMCright("right",currentBackground);
   c.addEventListener("keydown", (e) => {
   if (!e.repeat) {
     console.log(e);
@@ -69,14 +94,17 @@ back1.addEventListener (
   } else {
     console.log(`Key "${e.key}" repeating [event: keydown]`);
   }
-  if(e.keyCode === 39 && position < 3000){ //=== is checking if equal , == is casting
+  if(e.keyCode === 39 && position < 3500){ //=== is checking if equal , == is casting
     position = position+100;
-    walkingMCright("right");
+    walkingMCright("right",currentBackground);
   }
-    if(e.keyCode === 37 && position > 1000){
+    if(position === 3500 && currentBackground === back1){
+      window.requestAnimationFrame(fadeBlack);
+    }
+    if(e.keyCode === 37 && position > 200){
     position = position-100;
-    drawBackground1(back1);
-    walkingMCright("left");
+    drawBackground1(currentBackground);
+    walkingMCright("left",currentBackground);
     }
   }); //end of eventlistener
 },
@@ -86,7 +114,6 @@ back1.addEventListener (
 back1.src = "images/campdrawingbackground1.jpg";
 
 const blackTrans = new Image();
-blackTrans.onkeypress =  function(){};
 blackTrans.addEventListener(
   "keypress", () => {
     var c = document.getElementById("myCanvas");
