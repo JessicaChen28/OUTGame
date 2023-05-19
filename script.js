@@ -65,19 +65,30 @@ function fadeBlack(){
   getCanvaContext().rect(0,0,4032,3024);
   getCanvaContext().fillStyle = "#00000005"; //80 half transparent 
   getCanvaContext().fill();
+  console.log("faded");
   countFadeFrames++;
   if(countFadeFrames < 100){
     window.requestAnimationFrame(fadeBlack);
-  }else{
-    countFadeFrames = 100;
+  }else if(currentBackground === back1){
+    countFadeFrames = 0;
     newBack2();
+  } else if(currentBackground === back2){
+    countFadeFrames = 0;
+    newBack1();
   }
+}
+function newBack1(){
+  position = 3500;
+  currentBackground = back1;
+  getCanvaContext().clearRect(0,0,4032,3024);
+  drawBackground1(currentBackground);
+  walkingMCright("left",currentBackground);
 }
 function newBack2(){
   position = 100;
   currentBackground = back2;
   getCanvaContext().clearRect(0,0,4032,3024);
-  drawBackground1(back2);
+  drawBackground1(currentBackground);
   walkingMCright("right",currentBackground);
 }
 
@@ -94,14 +105,22 @@ back1.addEventListener (
   } else {
     console.log(`Key "${e.key}" repeating [event: keydown]`);
   }
-  if(e.keyCode === 39 && position < 3500){ //=== is checking if equal , == is casting
+    if(countFadeFrames > 0){ //if fadeBlack running, stop listening for keypress
+      return 0;
+    }
+  if(e.keyCode === 39 && position < 3600){ //=== is checking if equal , == is casting
     position = position+100;
     walkingMCright("right",currentBackground);
   }
-    if(position === 3500 && currentBackground === back1){
+    if(position === 3600 && currentBackground === back1){
+      countFadeFrames = 0;
       window.requestAnimationFrame(fadeBlack);
     }
-    if(e.keyCode === 37 && position > 200){
+    if(position === 100 && currentBackground === back2){
+      countFadeFrames = 0;
+      window.requestAnimationFrame(fadeBlack);
+    }
+    if(e.keyCode === 37 && position > 100){
     position = position-100;
     drawBackground1(currentBackground);
     walkingMCright("left",currentBackground);
