@@ -103,6 +103,11 @@ function convo(){
   getCanvaContext().fillStyle = "red";
   getCanvaContext().fillText(mcPart[currentline],1000,900+(200*currentline));
   
+  if(currentline === 1){
+    drawSis(sis2);
+  } else {
+    drawSis(sis3);
+  }
   getCanvaContext().fillStyle = "blue";
   getCanvaContext().fillText(sisPart[currentline],1000,1000+(200*currentline));
   
