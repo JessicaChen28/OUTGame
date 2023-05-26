@@ -2,12 +2,17 @@
 var position = 1000;
 var positionWalk = 1;
 var countFadeFrames = 0;
-
+var isText = false;
+var currentline = 0;
+var convoDone = false;
 
 const walk1 = new Image();
 const walk2 = new Image();
 const walk3 = new Image();
 const walk4 = new Image();
+const sis1 = new Image();
+const sis2 = new Image();
+const sis3 = new Image();
 const back1 = new Image();
 var currentBackground = back1;
 const back2 = new Image();
@@ -16,6 +21,9 @@ walk1.src = "images/walk1.jpg";
 walk2.src = "images/walk2.jpg";
 walk3.src = "images/walk3.jpg";
 walk4.src = "images/walk4.jpg";
+sis1.src = "images/sis1.jpg";
+sis2.src = "images/sis2.jpg";
+sis3.src = "images/sis3.jpg";
 back2.src = "images/campdrawingbackground2.jpg";
 
 function getCanvaContext(){
@@ -31,8 +39,13 @@ function drawMCwalk(image, direction){
       context.scale(-1,1); //x,y
   }
   
-  context.drawImage(image,-250,0,500,500); //-250 is pulling back
+  context.drawImage(image,-250,0,600,700); //-250 is pulling back
   context.restore();
+  var grd = context.createRadialGradient(position+250,1500+250,5,position+250,1500+250,1000);
+  grd.addColorStop(0,"#f7f2c600");
+  grd.addColorStop(1,"#21243bAB");
+  context.fillStyle = grd;
+  context.fillRect(0,0,4032,3024);
 }
 
 function drawBackground1(image){
@@ -44,6 +57,12 @@ function walkingMCright(direction, background){
   drawBackground1(background);
   //could try with array of images
   //var array = [walk1,walk2,walk3,walk4];
+    if(background === back2 ){
+      drawSis(sis1);
+      if(position >= 2000 && position <= 2500){
+        showText();
+      }
+    }
   if(positionWalk === 1 ) {
     drawMCwalk(walk1, direction);
     positionWalk = 2;
@@ -60,6 +79,34 @@ function walkingMCright(direction, background){
     drawMCwalk(walk4, direction);
     positionWalk = 1;
   }
+  if(background === back2 ){
+      if(position >= 2000 && position <= 2500){
+        showText();
+      }
+    }
+}
+function showText(){
+  if(!convoDone){ //is not convoDone = is not false == this is true
+    getCanvaContext().fillStyle = "red";
+    getCanvaContext().font = "100px serif";
+    getCanvaContext().fillText("Talk to Sister, press E",1000,800);
+    isText = true;
+  }
+}
+
+function convo(){
+  var mcPart = ["Hey what are you doing here?", "Still, you should have said something", "It is, but tell me when you leave the campsite, you could have gotten lost."];
+  var sisPart = ["Oh hey, sorry I couldn't sleep. I wanted to look at the moon", "Yeah sorry, but the moon is really pretty", "Alright fine, next time I will tell ."];
+  
+  getCanvaContext().font = "100px serif";
+  
+  getCanvaContext().fillStyle = "red";
+  getCanvaContext().fillText(mcPart[currentline],1000,900+(200*currentline));
+  
+  getCanvaContext().fillStyle = "blue";
+  getCanvaContext().fillText(sisPart[currentline],1000,1000+(200*currentline));
+  
+  currentline++;
 }
 function fadeBlack(){
   getCanvaContext().rect(0,0,4032,3024);
@@ -92,6 +139,11 @@ function newBack2(){
   walkingMCright("right",currentBackground);
 }
 
+function drawSis(image){
+  var context = getCanvaContext();
+  context.drawImage(image,2500,1500,500,500);
+}
+
 back1.addEventListener (
   "load", () => {
   var c = document.getElementById("myCanvas");
@@ -111,6 +163,12 @@ back1.addEventListener (
   if(e.keyCode === 39 && position < 3600){ //=== is checking if equal , == is casting
     position = position+100;
     walkingMCright("right",currentBackground);
+    // if(currentBackground === back2 && position === 1500){
+    //   console.log("talk to sister");
+    //   // getCanvaContext().fillStyle = "red";
+    //   // getCanvaContext().font = "100px serif";
+    //   // getCanvaContext().fillText("Talk to Sister",1000,900);
+    // }
   }
     if(position === 3600 && currentBackground === back1){
       countFadeFrames = 0;
@@ -125,23 +183,19 @@ back1.addEventListener (
     drawBackground1(currentBackground);
     walkingMCright("left",currentBackground);
     }
+    if(e.keyCode === 69 && isText === true && currentline <=2){
+      convo();
+    }else if(currentline > 2 && e.keyCode === 69){
+      convoDone = true;
+        drawBackground1(currentBackground);
+        walkingMCright("left",currentBackground);
+      }
   }); //end of eventlistener
 },
     false
 )
 
 back1.src = "images/campdrawingbackground1.jpg";
-
-const blackTrans = new Image();
-blackTrans.addEventListener(
-  "keypress", () => {
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.drawImage(blackTrans, 0, 0);
-  }
-)
-blackTrans.src = "images/black.jpg";
-
 
 //A variable container
 //Declaration var, let, const
