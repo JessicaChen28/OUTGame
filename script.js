@@ -5,6 +5,8 @@ var countFadeFrames = 0;
 var isText = false;
 var currentline = 0;
 var convoDone = false;
+var objective1 = true;
+var objective2 = false;
 
 const walk1 = new Image();
 const walk2 = new Image();
@@ -38,7 +40,6 @@ function drawMCwalk(image, direction){
   if(direction === "left") {
       context.scale(-1,1); //x,y
   }
-  
   context.drawImage(image,-250,0,600,700); //-250 is pulling back
   context.restore();
   var grd = context.createRadialGradient(position+250,1500+250,5,position+250,1500+250,1000);
@@ -51,6 +52,19 @@ function drawMCwalk(image, direction){
 function drawBackground1(image){
   var context = getCanvaContext();
   context.drawImage(image,0 ,0, 4032, 3024);
+}
+
+function shareObjective(){
+  if(objective1){
+    getCanvaContext().fillStyle = "red";
+    getCanvaContext().font = "100px serif";
+    getCanvaContext().fillText("Objective : Find your sister",0,100);
+  }
+  else if (objective2){
+    getCanvaContext().fillStyle = "red";
+    getCanvaContext().font = "100px serif";
+    getCanvaContext().fillText("Objective : Go back to your tent",0,100);
+  }
 }
 
 function walkingMCright(direction, background){
@@ -152,9 +166,9 @@ function drawSis(image){
 back1.addEventListener (
   "load", () => {
   var c = document.getElementById("myCanvas");
-    
-    drawBackground1(currentBackground);
-    walkingMCright("right",currentBackground);
+  drawBackground1(currentBackground);
+  walkingMCright("right",currentBackground);
+    shareObjective();
   c.addEventListener("keydown", (e) => {
   if (!e.repeat) {
     console.log(e);
@@ -168,12 +182,7 @@ back1.addEventListener (
   if(e.keyCode === 39 && position < 3600){ //=== is checking if equal , == is casting
     position = position+100;
     walkingMCright("right",currentBackground);
-    // if(currentBackground === back2 && position === 1500){
-    //   console.log("talk to sister");
-    //   // getCanvaContext().fillStyle = "red";
-    //   // getCanvaContext().font = "100px serif";
-    //   // getCanvaContext().fillText("Talk to Sister",1000,900);
-    // }
+    shareObjective();
   }
     if(position === 3600 && currentBackground === back1){
       countFadeFrames = 0;
@@ -187,9 +196,12 @@ back1.addEventListener (
     position = position-100;
     drawBackground1(currentBackground);
     walkingMCright("left",currentBackground);
+      shareObjective();
     }
     if(e.keyCode === 69 && isText === true && currentline <=2){
       convo();
+      objective1 = false;
+      objective2 = true;
     }else if(currentline > 2 && e.keyCode === 69){
       convoDone = true;
         drawBackground1(currentBackground);
