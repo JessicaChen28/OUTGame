@@ -8,6 +8,7 @@ var convoDone = false;
 var objective1 = true;
 var objective2 = false;
 
+const winscreen = new Image();
 const walk1 = new Image();
 const walk2 = new Image();
 const walk3 = new Image();
@@ -19,6 +20,7 @@ const back1 = new Image();
 var currentBackground = back1;
 const back2 = new Image();
 
+winscreen.src = "images/winscreen.jpg";
 walk1.src = "images/walk1.jpg";
 walk2.src = "images/walk2.jpg";
 walk3.src = "images/walk3.jpg";
@@ -138,6 +140,9 @@ function fadeBlack(){
   }else if(currentBackground === back1){
     countFadeFrames = 0;
     newBack2();
+    if(objective2){
+      getCanvaContext().drawImage(winscreen,0,0,4032,3024);
+    }
   } else if(currentBackground === back2){
     countFadeFrames = 0;
     newBack1();
@@ -207,6 +212,10 @@ back1.addEventListener (
         drawBackground1(currentBackground);
         walkingMCright("left",currentBackground);
       }
+    if(position === 900 && currentBackground === back1 && objective2){
+      countFadeFrames = 0;
+      window.requestAnimationFrame(fadeBlack);
+    }
   }); //end of eventlistener
 },
     false
