@@ -174,7 +174,7 @@ back1.addEventListener (
   drawBackground1(currentBackground);
   walkingMCright("right",currentBackground);
     shareObjective();
-  c.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", (e) => {
   if (!e.repeat) {
     console.log(e);
     console.log(`Key "${e.key}" pressed [event: keydown]`);
