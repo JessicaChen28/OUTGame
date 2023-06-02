@@ -2,8 +2,6 @@
 
 ## This is a game in progress.
 
-### Find your sister
-Hello
+### Hello, this is a small demo of my game. The objective is to find your sister.
 https://replit.com/@JessicaChen32/OUTGame
-Bye.
 
