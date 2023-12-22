@@ -61,6 +61,7 @@ function shareObjective() {
     getCanvaContext().fillStyle = "red";
     getCanvaContext().font = "100px serif";
     getCanvaContext().fillText("Objective : Find your sister", 0, 100);
+    
   }
   else if (objective2) {
     getCanvaContext().fillStyle = "red";
@@ -184,7 +185,7 @@ back1.addEventListener(
       if (countFadeFrames > 0) { //if fadeBlack running, stop listening for keypress
         return 0;
       }
-      if (e.key === 39 && position < 3600) { //=== is checking if equal , == is casting
+      if (e.key === "ArrowRight" && position < 3600) { //=== is checking if equal , == is casting
         position = position + 100;
         walkingMCright("right", currentBackground);
         shareObjective();
@@ -197,17 +198,17 @@ back1.addEventListener(
         countFadeFrames = 0;
         window.requestAnimationFrame(fadeBlack);
       }
-      if (e.key === 37 && position > 100) {
+      if (e.key === "ArrowLeft" && position > 100) {
         position = position - 100;
         drawBackground1(currentBackground);
         walkingMCright("left", currentBackground);
         shareObjective();
       }
-      if (e.key === 69 && isText === true && currentline <= 2) {
+      if (e.key === "e" && isText === true && currentline <= 2) {
         convo();
         objective1 = false;
         objective2 = true;
-      } else if (currentline > 2 && e.key === 69) {
+      } else if (currentline > 2 && e.key === "e") {
         convoDone = true;
         drawBackground1(currentBackground);
         walkingMCright("left", currentBackground);
